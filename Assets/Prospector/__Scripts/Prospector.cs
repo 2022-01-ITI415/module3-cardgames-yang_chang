@@ -8,7 +8,7 @@ using System.Collections.Generic;
 public class Prospector : MonoBehaviour
 {
 
-    static public Prospector S;
+    static public Prospector S; 
 
     [Header("Set in Inspector")]
     public TextAsset deckXML;
@@ -85,7 +85,7 @@ void SetUpUITexts() {
         drawPile.RemoveAt(0);
         return (cd);
     }
-    void LayoutGame()
+    void LayoutGame() 
     {
         if (layoutAnchor == null)
         {
@@ -100,28 +100,28 @@ void SetUpUITexts() {
             cp.faceUp = tSD.faceUp;
             cp.transform.parent = layoutAnchor;
             cp.transform.localPosition = new Vector3
-        {
-            layout.multiplier.x * tSD.x,
-            layout.multiplier.x * tSD.y,
-            -tSD.layerID);
-            cp.layoutID = tSD.id;
-            cp.slotDef = tSD;
-            cp.state = eCardState.tableau;
-            cp.SetSortingLayerName(tSD.layerName);
-            tableau.Add(cp);
-        }
-        foreach (CardProspector tCP in tableau)
-        {
-            foreach (int hid in tCP.slotDef.hiddenBy)
             {
-                cp = FindCardByLayoutID(hid);
-                tCP.hiddenBy.Add(cp);
+                layout.multiplier.x * tSD.x,
+                layout.multiplier.x * tSD.y,
+                -tSD.layerID);
+                cp.layoutID = tSD.id;
+                cp.slotDef = tSD;
+                cp.state = eCardState.tableau;
+                cp.SetSortingLayerName(tSD.layerName);
+                tableau.Add(cp);
             }
-        }
-        MoveToTarget(Draw());
-        UpdateDrawPile();
-        CardProspector FindCardByLayoutID(int layoutID)
-        {
+            foreach (CardProspector tCP in tableau)
+            {
+                foreach (int hid in tCP.slotDef.hiddenBy)
+                {
+                    cp = FindCardByLayoutID(hid);
+                    tCP.hiddenBy.Add(cp);
+                }
+            }
+            MoveToTarget(Draw());
+            UpdateDrawPile();
+         CardProspector FindCardByLayoutID(int layoutID)
+         {
             foreach (CardProspector tCP in tableau)
             {
                 if (tCP.layoutID == layoutID)
@@ -130,9 +130,9 @@ void SetUpUITexts() {
                 }
             }
             return (null);
-        }
-        void SetTableauFaces()
-        {
+         }
+         void SetTableauFaces()
+         {
             foreach (CardProspector cd in tableau)
             {
                 bool faceUp = true;
@@ -145,7 +145,7 @@ void SetUpUITexts() {
                 }
                 cd.faceUp = faceUp;
             }
-        }
+         }
     }
 
     void MoveToDiscard(CardProspector cd)
@@ -327,4 +327,3 @@ void SetUpUITexts() {
                 break;
         }
     }
-}
