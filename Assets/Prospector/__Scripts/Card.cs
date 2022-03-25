@@ -14,7 +14,7 @@ public class Card : MonoBehaviour {
 	
 	public GameObject back;  // back of card;
 	public CardDefinition def;  // from DeckXML.xml
-	public SpriteRender[] spriteRenderers;
+	public SpriteRenderer[] spriteRenderers;
 	void Start(){
 		SetSortOrder(0);
 	}		
@@ -26,7 +26,7 @@ public class Card : MonoBehaviour {
 	public void SetSortingLayerName(string tSLN){
 		PopulateSpriteRenderers();
 		foreach(SpriteRenderer tSR in spriteRenderers){
-			tSR.sortingLayerNames = tSLN;
+			tSR.sortingLayerName = tSLN;
 		}
 	}
 	public void SetSortOrder(int sOrd){
@@ -42,7 +42,7 @@ public class Card : MonoBehaviour {
 			break;
 			case "face":
 			default:
-			tSR sortingOrder = sOrd +1;
+			tSR.sortingOrder = sOrd +1;
 			break;
 		}
 	}
@@ -59,17 +59,7 @@ public class Card : MonoBehaviour {
 	virtual public void OnMouseUpAsButton(){
 		print(name);
 	}
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-} // class Card
+}
 
 [System.Serializable]
 public class Decorator{
@@ -86,3 +76,4 @@ public class CardDefinition{
 	public List<Decorator>	
 					pips = new List<Decorator>();  // Pips Used
 }
+

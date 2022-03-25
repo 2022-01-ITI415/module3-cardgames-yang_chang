@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic; 
 using UnityEngine; 
 using UnityEngine.UI;
-public class Scoreboard : MonoBehaviour { 
-  public static Scoreboard S; 
+public class ScoreBoard : MonoBehaviour { 
+  public static ScoreBoard S; 
    
   [Header("Set in Inspector")] 
   public GameObject  prefabFloatingScore; 
