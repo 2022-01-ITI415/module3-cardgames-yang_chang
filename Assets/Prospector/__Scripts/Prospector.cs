@@ -8,7 +8,7 @@ using System.Collections.Generic;
 public class Prospector : MonoBehaviour
 {
 
-    static public Prospector S; 
+    static public Prospector S;
 
     [Header("Set in Inspector")]
     public TextAsset deckXML;
@@ -34,30 +34,35 @@ public class Prospector : MonoBehaviour
         S = this;
         SetUpUITexts();
     }
-void SetUpUITexts() { 
-        GameObject go = GameObject.Find("HighScore"); 
-        if (go != null) { 
-            highScoreText = go.GetComponent<Text>(); 
-        } 
-        int highScore = ScoreManager.HIGH_SCORE; 
-        string hScore = "High Score: "+Utils.AddCommasToNumber(highScore); 
-        go.GetComponent<Text>().text = hScore; 
-        go = GameObject.Find ("GameOver"); 
-        if (go != null) { 
-            gameOverText = go.GetComponent<Text>(); 
-        } 
-      
-        go = GameObject.Find ("RoundResult"); 
-        if (go != null) { 
-            roundResultText = go.GetComponent<Text>(); 
-        } 
-        ShowResultsUI( false ); 
-  } 
-      
-      void ShowResultsUI(bool show) { 
-          gameOverText.gameObject.SetActive(show); 
-          roundResultText.gameObject.SetActive(show); 
-        } 
+    void SetUpUITexts()
+    {
+        GameObject go = GameObject.Find("HighScore");
+        if (go != null)
+        {
+            highScoreText = go.GetComponent<Text>();
+        }
+        int highScore = ScoreManager.HIGH_SCORE;
+        string hScore = "High Score: " + Utils.AddCommasToNumber(highScore);
+        go.GetComponent<Text>().text = hScore;
+        go = GameObject.Find("GameOver");
+        if (go != null)
+        {
+            gameOverText = go.GetComponent<Text>();
+        }
+
+        go = GameObject.Find("RoundResult");
+        if (go != null)
+        {
+            roundResultText = go.GetComponent<Text>();
+        }
+        ShowResultsUI(false);
+    }
+
+    void ShowResultsUI(bool show)
+    {
+        gameOverText.gameObject.SetActive(show);
+        roundResultText.gameObject.SetActive(show);
+    }
     void Start()
     {
         Scoreboard.S.score = ScoreManager.SCORE;
@@ -85,7 +90,7 @@ void SetUpUITexts() {
         drawPile.RemoveAt(0);
         return (cd);
     }
-    void LayoutGame() 
+    void LayoutGame()
     {
         if (layoutAnchor == null)
         {
@@ -103,25 +108,25 @@ void SetUpUITexts() {
             {
                 layout.multiplier.x * tSD.x,
                 layout.multiplier.x * tSD.y,
-                -tSD.layerID);
-                cp.layoutID = tSD.id;
-                cp.slotDef = tSD;
-                cp.state = eCardState.tableau;
-                cp.SetSortingLayerName(tSD.layerName);
-                tableau.Add(cp);
-            }
-            foreach (CardProspector tCP in tableau)
+                (-tSD.layerID);
+            cp.layoutID = tSD.id;
+            cp.slotDef = tSD;
+            cp.state = eCardState.tableau;
+            cp.SetSortingLayerName(tSD.layerName);
+            tableau.Add(cp);
+        }
+        foreach (CardProspector tCP in tableau)
+        {
+            foreach (int hid in tCP.slotDef.hiddenBy)
             {
-                foreach (int hid in tCP.slotDef.hiddenBy)
-                {
-                    cp = FindCardByLayoutID(hid);
-                    tCP.hiddenBy.Add(cp);
-                }
+                cp = FindCardByLayoutID(hid);
+                tCP.hiddenBy.Add(cp);
             }
-            MoveToTarget(Draw());
-            UpdateDrawPile();
-         CardProspector FindCardByLayoutID(int layoutID)
-         {
+        }
+        MoveToTarget(Draw());
+        UpdateDrawPile();
+        CardProspector FindCardByLayoutID(int layoutID)
+        {
             foreach (CardProspector tCP in tableau)
             {
                 if (tCP.layoutID == layoutID)
@@ -130,9 +135,9 @@ void SetUpUITexts() {
                 }
             }
             return (null);
-         }
-         void SetTableauFaces()
-         {
+        }
+        void SetTableauFaces()
+        {
             foreach (CardProspector cd in tableau)
             {
                 bool faceUp = true;
@@ -145,185 +150,185 @@ void SetUpUITexts() {
                 }
                 cd.faceUp = faceUp;
             }
-         }
-    }
-
-    void MoveToDiscard(CardProspector cd)
-    {
-        cd.state = eCardState.discard;
-        discardPile.Add(cd);
-        cd.transform.parent = layoutAnchor;
-
-
-        cd.transform.localPosition = newVector3(
-        layout.multiplier.x * layout.discardPile.x,
-        layout.multiplier.y * layout.discardPile.y,
-        -layout.discardPile.layerID + 0.5f);
-        cd.faceUp = true;
-
-        cd.SetSortingLayerName(layout.discardPile.layerName);
-        cd.SetSortOrder(-100 + discardPile.Count);
-    }
-    void MoveToTarget(CardProspector cd)
-    {
-
-        if (target != null) MoveToDiscard(target);
-        target = cd;
-        cd.state = eCardState.target;
-        cd.transform.parent = layoutAnchor;
-        cd.transform.localPosition = newVector3(
-        layout.multiplier.x * layout.discardPile.x,
-        layout.multiplier.y * layout.discardPile.y,
-        -layout.discardPile.layerID);
-
-        cd.faceUp = true;
-        cd.SetSortingLayerName(layout.discardPile.layerName);
-        cd.SetSortOrder(0);
-    }
-
-    void UpdateDrawPile()
-    {
-        CardProspectorcd;
-        for (inti = 0; i < drawPile.Count; i++)
-        {
-            cd = drawPile[i];
-            cd.transform.parent = layoutAnchor;
-
-            Vector2dpStagger = layout.drawPile.stagger;
-            cd.transform.localPosition = newVector3(
-            layout.multiplier.x * (layout.drawPile.x + i * dpStagger.x),
-            layout.multiplier.y * (layout.drawPile.y + i * dpStagger.y),
-            -layout.drawPile.layerID + 0.1f * i);
-            cd.faceUp = false;
-            cd.state = eCardState.drawpile;
-            cd.SetSortingLayerName(layout.drawPile.layerName);
-            cd.SetSortorder(-10 * i);
         }
     }
-    public void CardClicked(CardProspector cd)
+}
+void MoveToDiscard(CardProspector cd)
+{
+    cd.state = eCardState.discard;
+    discardPile.Add(cd);
+    cd.transform.parent = layoutAnchor;
+    cd.transform.localPosition = newVector3(
+    layout.multiplier.x * layout.discardPile.x,
+    layout.multiplier.y * layout.discardPile.y,
+    -layout.discardPile.layerID + 0.5f);
+    cd.faceUp = true;
+    cd.SetSortingLayerName(layout.discardPile.layerName);
+    cd.SetSortOrder(-100 + discardPile.Count);
+}
+void MoveToTarget(CardProspector cd)
+{
+
+    if (target != null) MoveToDiscard(target);
+    target = cd;
+    cd.state = eCardState.target;
+    cd.transform.parent = layoutAnchor;
+    cd.transform.localPosition = newVector3(
+    layout.multiplier.x * layout.discardPile.x,
+    layout.multiplier.y * layout.discardPile.y,
+    -layout.discardPile.layerID);
+
+    cd.faceUp = true;
+    cd.SetSortingLayerName(layout.discardPile.layerName);
+    cd.SetSortOrder(0);
+}
+
+void UpdateDrawPile()
+{
+    CardProspectorcd;
+    for (inti = 0; i < drawPile.Count; i++)
     {
-        switch (cd.state)
-        {
-            case eCardState.target:
-                bool validMatch = true;
-                if (!cd.faceUp)
-                {
-                    validMatch = false;
-                }
-                if (!AdjacentRank(cd, target))
-                {
-                    validMatch = false;
-                }
-                if (!validMatch) return;
-                tableau.Remove(cd);
-                MoveToTarget(cd);
-                SetTableauFaces();
-                break;
-            case eCardState.drawpile:
-                ScoreManager.EVENT(eScoreEvent.draw);
-                FloatingScoreHandler(eScoreEvent.draw);
-                SetTableauFaces();
-                FloatingScoreHandler(eScoreEvent.mine);
-                break;
-        }
-        CheckForGameOver();
+        cd = drawPile[i];
+        cd.transform.parent = layoutAnchor;
+
+        Vector2dpStagger = layout.drawPile.stagger;
+        cd.transform.localPosition = newVector3(
+        layout.multiplier.x * (layout.drawPile.x + i * dpStagger.x),
+        layout.multiplier.y * (layout.drawPile.y + i * dpStagger.y),
+        -layout.drawPile.layerID + 0.1f * i);
+        cd.faceUp = false;
+        cd.state = eCardState.drawpile;
+        cd.SetSortingLayerName(layout.drawPile.layerName);
+        cd.SetSortorder(-10 * i);
     }
-    void CheckForGameOver()
+}
+public void CardClicked(CardProspector cd)
+{
+    switch (cd.state)
     {
-        if (tableau.Count == 0)
+        case eCardState.target:
+            bool validMatch = true;
+            if (!cd.faceUp)
+            {
+                validMatch = false;
+            }
+            if (!AdjacentRank(cd, target))
+            {
+                validMatch = false;
+            }
+            if (!validMatch) return;
+            tableau.Remove(cd);
+            MoveToTarget(cd);
+            SetTableauFaces();
+            break;
+        case eCardState.drawpile:
+            ScoreManager.EVENT(eScoreEvent.draw);
+            FloatingScoreHandler(eScoreEvent.draw);
+            SetTableauFaces();
+            FloatingScoreHandler(eScoreEvent.mine);
+            break;
+    }
+    CheckForGameOver();
+}
+void CheckForGameOver()
+{
+    if (tableau.Count == 0)
+    {
+        CheckForGameOver(true);
+        return;
+    }
+    foreach (CardProspector cd in tableau)
+    {
+        if (AdjacentRank(cd, target))
         {
-            CheckForGameOver(true);
             return;
         }
-        foreach (CardProspector cd in tableau)
-        {
-            if (AdjacentRank(cd, target))
-            {
-                return;
-            }
-        }
-        GameOver(false);
     }
-    void GameOver(bool won)
+    GameOver(false);
+}
+void GameOver(bool won)
+{
+    int score = ScoreManager.SCORE;
+    if (fsRun != null) score += fsRun.score;
+    if (won)
     {
-        int score = ScoreManager.SCORE;
-        if(fsRun != null) score += fsRun.score;
-        if (won)
+        gameOverText.text = "Round Over";
+        roundResultText.text = "You won this round!\nRound Score: " + score;
+        ShowResultsUI(true);
+        ScoreManager.EVENT(eScoreEvent.gameWin);
+        FloatingScoreHandler(eScoreEvent.gameWin);
+    }
+    else
+    {
+        gameOverText.text = "Game Over";
+        if (ScoreManager.HIGH_SCORE <= score)
         {
-            gameOverText.text = "Round Over";
-            roundResultText.text = "You won this round!\nRound Score: "+score;
-            ShowResultsUI (true);
-            ScoreManager.EVENT(eScoreEvent.gameWin);
-            FloatingScoreHandler(eScoreEvent.gameWin);
+            string str = "You got the high score!\nHigh score: " + score;
+            roundResultText.text = str;
         }
         else
         {
-            gameOverText.text = "Game Over";
-            if (ScoreManager.HIGH_SCORE <= score){
-                string str = "You got the high score!\nHigh score: "+score;
-                roundResultText.text = str;
-            }
-            else{
-                roundResultText.text = "Your final score was: "+score;
-            }
-            ScoreManager.EVENT(eScoreEvent.gameLoss);
-            FloatingScoreHandler(eScoreEvent.gameLoss);
+            roundResultText.text = "Your final score was: " + score;
         }
-        SceneManager.LoadScene("_Prospector_Scene_0");
+        ScoreManager.EVENT(eScoreEvent.gameLoss);
+        FloatingScoreHandler(eScoreEvent.gameLoss);
     }
-    public bool AdjacentRank(CardProspector c0, cardProspector c1)
+    SceneManager.LoadScene("_Prospector_Scene_0");
+}
+public bool AdjacentRank(CardProspector c0, cardProspector c1)
+{
+    if (!c0.faceUp || !c1.faceUp) return (false);
+    if (Mathf.Abs(c0.rank - c1.rank) == 1)
     {
-        if (!c0.faceUp || !c1.faceUp) return (false);
-        if (Mathf.Abs(c0.rank - c1.rank) == 1)
-        {
-            return (true);
-        }
-        if (c0.rank == 1 && c1.rank == 13) return (true);
-        if (c0.rank == 13 && c1.rank == 1) return (true);
-        return (false);
+        return (true);
     }
-    void FloatingScoreHandler(eScoreEvent evt)
+    if (c0.rank == 1 && c1.rank == 13) return (true);
+    if (c0.rank == 13 && c1.rank == 1) return (true);
+    return (false);
+}
+void FloatingScoreHandler(eScoreEvent evt)
+{
+    List<Vector2> fsPts;
+    switch (evt)
     {
-        List<Vector2> fsPts;
-        switch (evt)
-        {
-            case eScoreEvent.draw:
-            case eScoreEvent.gameWin:
-            case eScoreEvent.gameLoss:
-                if (fsRun != null)
-                {
-                    fsPts = new List<Vector2>();
-                    fsPts.Add(fsPosRun);
-                    fsPts.Add(fsPosMid2);
-                    fsPts.Add(fsPosMid2);
-                    fsPts.Add(fsPosEnd);
-                    fsRun.reportFinishTo = Scoreboard.S.gameObject;
-                    fsRun.Init(fsPts, 0, 1);
-                    fsRun.fontSizes = new List<float>(new float[] { 28, 36, 4 });
-                    fsRun = null;
-                }
-                break;
-
-            case eScoreEvent.mine:
-                FloatingScore fs;
-                Vector2 p0 = Input.mousePosition;
-                p0.x /= Screen.width;
-                p0.y /= Screen.height;
+        case eScoreEvent.draw:
+        case eScoreEvent.gameWin:
+        case eScoreEvent.gameLoss:
+            if (fsRun != null)
+            {
                 fsPts = new List<Vector2>();
-                fsPts.Add(p0);
-                fsPts.Add(fsPosMid);
                 fsPts.Add(fsPosRun);
-                fs = Scoreboard.S.CreateFloatingScore(ScoreManager.CHAIN, fsPts);
-                fs.fontSizes = new List<float>(new float[] { 4, 50, 28 });
-                if (fsRun == null)
-                {
-                    fsRun = fs;
-                    fsRun.reportFinishTo = null;
-                }
-                else
-                {
-                    fs.reportFinishTo = fsRun.gameObject;
-                }
-                break;
-        }
+                fsPts.Add(fsPosMid2);
+                fsPts.Add(fsPosMid2);
+                fsPts.Add(fsPosEnd);
+                fsRun.reportFinishTo = Scoreboard.S.gameObject;
+                fsRun.Init(fsPts, 0, 1);
+                fsRun.fontSizes = new List<float>(new float[] { 28, 36, 4 });
+                fsRun = null;
+            }
+            break;
+
+        case eScoreEvent.mine:
+            FloatingScore fs;
+            Vector2 p0 = Input.mousePosition;
+            p0.x /= Screen.width;
+            p0.y /= Screen.height;
+            fsPts = new List<Vector2>();
+            fsPts.Add(p0);
+            fsPts.Add(fsPosMid);
+            fsPts.Add(fsPosRun);
+            fs = Scoreboard.S.CreateFloatingScore(ScoreManager.CHAIN, fsPts);
+            fs.fontSizes = new List<float>(new float[] { 4, 50, 28 });
+            if (fsRun == null)
+            {
+                fsRun = fs;
+                fsRun.reportFinishTo = null;
+            }
+            else
+            {
+                fs.reportFinishTo = fsRun.gameObject;
+            }
+            break;
     }
+}
+}
