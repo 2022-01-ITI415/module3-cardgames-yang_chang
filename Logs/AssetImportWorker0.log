@@ -192,3 +192,11 @@ Received Import Request.
 Start importing Assets/Prospector/__Scripts/ScoreManager.cs using Guid(5b4dddd062eb640cab82ef2e023bee18) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '1cadf3d537d9fbdab452b5bae51205dd') in 0.014003 seconds 
   Import took 0.038780 seconds .
 
+========================================================================
+Received Import Request.
+  Time since last request: 76.547246 seconds.
+  path: Assets/Prospector/__Scripts/ScoreManager.cs
+  artifactKey: Guid(5b4dddd062eb640cab82ef2e023bee18) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prospector/__Scripts/ScoreManager.cs using Guid(5b4dddd062eb640cab82ef2e023bee18) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd44e1f38d2e141bb5da72a5fa9665393') in 0.004904 seconds 
+  Import took 0.009673 seconds .
+
