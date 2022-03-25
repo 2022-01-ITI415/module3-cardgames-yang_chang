@@ -152,183 +152,183 @@ public class Prospector : MonoBehaviour
             }
         }
     }
-}
-void MoveToDiscard(CardProspector cd)
-{
-    cd.state = eCardState.discard;
-    discardPile.Add(cd);
-    cd.transform.parent = layoutAnchor;
-    cd.transform.localPosition = newVector3(
-    layout.multiplier.x * layout.discardPile.x,
-    layout.multiplier.y * layout.discardPile.y,
-    -layout.discardPile.layerID + 0.5f);
-    cd.faceUp = true;
-    cd.SetSortingLayerName(layout.discardPile.layerName);
-    cd.SetSortOrder(-100 + discardPile.Count);
-}
-void MoveToTarget(CardProspector cd)
-{
-
-    if (target != null) MoveToDiscard(target);
-    target = cd;
-    cd.state = eCardState.target;
-    cd.transform.parent = layoutAnchor;
-    cd.transform.localPosition = newVector3(
-    layout.multiplier.x * layout.discardPile.x,
-    layout.multiplier.y * layout.discardPile.y,
-    -layout.discardPile.layerID);
-
-    cd.faceUp = true;
-    cd.SetSortingLayerName(layout.discardPile.layerName);
-    cd.SetSortOrder(0);
-}
-
-void UpdateDrawPile()
-{
-    CardProspectorcd;
-    for (inti = 0; i < drawPile.Count; i++)
+    void MoveToDiscard(CardProspector cd)
     {
-        cd = drawPile[i];
+        cd.state = eCardState.discard;
+        discardPile.Add(cd);
         cd.transform.parent = layoutAnchor;
-
-        Vector2dpStagger = layout.drawPile.stagger;
         cd.transform.localPosition = newVector3(
-        layout.multiplier.x * (layout.drawPile.x + i * dpStagger.x),
-        layout.multiplier.y * (layout.drawPile.y + i * dpStagger.y),
-        -layout.drawPile.layerID + 0.1f * i);
-        cd.faceUp = false;
-        cd.state = eCardState.drawpile;
-        cd.SetSortingLayerName(layout.drawPile.layerName);
-        cd.SetSortorder(-10 * i);
+        layout.multiplier.x * layout.discardPile.x,
+        layout.multiplier.y * layout.discardPile.y,
+        -layout.discardPile.layerID + 0.5f);
+        cd.faceUp = true;
+        cd.SetSortingLayerName(layout.discardPile.layerName);
+        cd.SetSortOrder(-100 + discardPile.Count);
     }
-}
-public void CardClicked(CardProspector cd)
-{
-    switch (cd.state)
+
+    void MoveToTarget(CardProspector cd)
     {
-        case eCardState.target:
-            bool validMatch = true;
-            if (!cd.faceUp)
-            {
-                validMatch = false;
-            }
-            if (!AdjacentRank(cd, target))
-            {
-                validMatch = false;
-            }
-            if (!validMatch) return;
-            tableau.Remove(cd);
-            MoveToTarget(cd);
-            SetTableauFaces();
-            break;
-        case eCardState.drawpile:
-            ScoreManager.EVENT(eScoreEvent.draw);
-            FloatingScoreHandler(eScoreEvent.draw);
-            SetTableauFaces();
-            FloatingScoreHandler(eScoreEvent.mine);
-            break;
+
+        if (target != null) MoveToDiscard(target);
+        target = cd;
+        cd.state = eCardState.target;
+        cd.transform.parent = layoutAnchor;
+        cd.transform.localPosition = newVector3(
+        layout.multiplier.x * layout.discardPile.x,
+        layout.multiplier.y * layout.discardPile.y,
+        -layout.discardPile.layerID);
+
+        cd.faceUp = true;
+        cd.SetSortingLayerName(layout.discardPile.layerName);
+        cd.SetSortOrder(0);
     }
-    CheckForGameOver();
-}
-void CheckForGameOver()
-{
-    if (tableau.Count == 0)
+
+    void UpdateDrawPile()
     {
-        CheckForGameOver(true);
-        return;
-    }
-    foreach (CardProspector cd in tableau)
-    {
-        if (AdjacentRank(cd, target))
+        CardProspectorcd;
+        for (inti = 0; i < drawPile.Count; i++)
         {
-            return;
+            cd = drawPile[i];
+            cd.transform.parent = layoutAnchor;
+
+            Vector2dpStagger = layout.drawPile.stagger;
+            cd.transform.localPosition = newVector3(
+            layout.multiplier.x * (layout.drawPile.x + i * dpStagger.x),
+            layout.multiplier.y * (layout.drawPile.y + i * dpStagger.y),
+            -layout.drawPile.layerID + 0.1f * i);
+            cd.faceUp = false;
+            cd.state = eCardState.drawpile;
+            cd.SetSortingLayerName(layout.drawPile.layerName);
+            cd.SetSortorder(-10 * i);
         }
     }
-    GameOver(false);
-}
-void GameOver(bool won)
-{
-    int score = ScoreManager.SCORE;
-    if (fsRun != null) score += fsRun.score;
-    if (won)
+    public void CardClicked(CardProspector cd)
     {
-        gameOverText.text = "Round Over";
-        roundResultText.text = "You won this round!\nRound Score: " + score;
-        ShowResultsUI(true);
-        ScoreManager.EVENT(eScoreEvent.gameWin);
-        FloatingScoreHandler(eScoreEvent.gameWin);
-    }
-    else
-    {
-        gameOverText.text = "Game Over";
-        if (ScoreManager.HIGH_SCORE <= score)
+        switch (cd.state)
         {
-            string str = "You got the high score!\nHigh score: " + score;
-            roundResultText.text = str;
+            case eCardState.target:
+                bool validMatch = true;
+                if (!cd.faceUp)
+                {
+                    validMatch = false;
+                }
+                if (!AdjacentRank(cd, target))
+                {
+                    validMatch = false;
+                }
+                if (!validMatch) return;
+                tableau.Remove(cd);
+                MoveToTarget(cd);
+                SetTableauFaces();
+                break;
+            case eCardState.drawpile:
+                ScoreManager.EVENT(eScoreEvent.draw);
+                FloatingScoreHandler(eScoreEvent.draw);
+                SetTableauFaces();
+                FloatingScoreHandler(eScoreEvent.mine);
+                break;
+        }
+        CheckForGameOver();
+    }
+    void CheckForGameOver()
+    {
+        if (tableau.Count == 0)
+        {
+            CheckForGameOver(true);
+            return;
+        }
+        foreach (CardProspector cd in tableau)
+        {
+            if (AdjacentRank(cd, target))
+            {
+                return;
+            }
+        }
+        GameOver(false);
+    }
+    void GameOver(bool won)
+    {
+        int score = ScoreManager.SCORE;
+        if (fsRun != null) score += fsRun.score;
+        if (won)
+        {
+            gameOverText.text = "Round Over";
+            roundResultText.text = "You won this round!\nRound Score: " + score;
+            ShowResultsUI(true);
+            ScoreManager.EVENT(eScoreEvent.gameWin);
+            FloatingScoreHandler(eScoreEvent.gameWin);
         }
         else
         {
-            roundResultText.text = "Your final score was: " + score;
-        }
-        ScoreManager.EVENT(eScoreEvent.gameLoss);
-        FloatingScoreHandler(eScoreEvent.gameLoss);
-    }
-    SceneManager.LoadScene("_Prospector_Scene_0");
-}
-public bool AdjacentRank(CardProspector c0, cardProspector c1)
-{
-    if (!c0.faceUp || !c1.faceUp) return (false);
-    if (Mathf.Abs(c0.rank - c1.rank) == 1)
-    {
-        return (true);
-    }
-    if (c0.rank == 1 && c1.rank == 13) return (true);
-    if (c0.rank == 13 && c1.rank == 1) return (true);
-    return (false);
-}
-void FloatingScoreHandler(eScoreEvent evt)
-{
-    List<Vector2> fsPts;
-    switch (evt)
-    {
-        case eScoreEvent.draw:
-        case eScoreEvent.gameWin:
-        case eScoreEvent.gameLoss:
-            if (fsRun != null)
+            gameOverText.text = "Game Over";
+            if (ScoreManager.HIGH_SCORE <= score)
             {
-                fsPts = new List<Vector2>();
-                fsPts.Add(fsPosRun);
-                fsPts.Add(fsPosMid2);
-                fsPts.Add(fsPosMid2);
-                fsPts.Add(fsPosEnd);
-                fsRun.reportFinishTo = Scoreboard.S.gameObject;
-                fsRun.Init(fsPts, 0, 1);
-                fsRun.fontSizes = new List<float>(new float[] { 28, 36, 4 });
-                fsRun = null;
-            }
-            break;
-
-        case eScoreEvent.mine:
-            FloatingScore fs;
-            Vector2 p0 = Input.mousePosition;
-            p0.x /= Screen.width;
-            p0.y /= Screen.height;
-            fsPts = new List<Vector2>();
-            fsPts.Add(p0);
-            fsPts.Add(fsPosMid);
-            fsPts.Add(fsPosRun);
-            fs = Scoreboard.S.CreateFloatingScore(ScoreManager.CHAIN, fsPts);
-            fs.fontSizes = new List<float>(new float[] { 4, 50, 28 });
-            if (fsRun == null)
-            {
-                fsRun = fs;
-                fsRun.reportFinishTo = null;
+                string str = "You got the high score!\nHigh score: " + score;
+                roundResultText.text = str;
             }
             else
             {
-                fs.reportFinishTo = fsRun.gameObject;
+                roundResultText.text = "Your final score was: " + score;
             }
-            break;
+            ScoreManager.EVENT(eScoreEvent.gameLoss);
+            FloatingScoreHandler(eScoreEvent.gameLoss);
+        }
+        SceneManager.LoadScene("_Prospector_Scene_0");
     }
-}
+    public bool AdjacentRank(CardProspector c0, cardProspector c1)
+    {
+        if (!c0.faceUp || !c1.faceUp) return (false);
+        if (Mathf.Abs(c0.rank - c1.rank) == 1)
+        {
+            return (true);
+        }
+        if (c0.rank == 1 && c1.rank == 13) return (true);
+        if (c0.rank == 13 && c1.rank == 1) return (true);
+        return (false);
+    }
+    void FloatingScoreHandler(eScoreEvent evt)
+    {
+        List<Vector2> fsPts;
+        switch (evt)
+        {
+            case eScoreEvent.draw:
+            case eScoreEvent.gameWin:
+            case eScoreEvent.gameLoss:
+                if (fsRun != null)
+                {
+                    fsPts = new List<Vector2>();
+                    fsPts.Add(fsPosRun);
+                    fsPts.Add(fsPosMid2);
+                    fsPts.Add(fsPosMid2);
+                    fsPts.Add(fsPosEnd);
+                    fsRun.reportFinishTo = Scoreboard.S.gameObject;
+                    fsRun.Init(fsPts, 0, 1);
+                    fsRun.fontSizes = new List<float>(new float[] { 28, 36, 4 });
+                    fsRun = null;
+                }
+                break;
+
+            case eScoreEvent.mine:
+                FloatingScore fs;
+                Vector2 p0 = Input.mousePosition;
+                p0.x /= Screen.width;
+                p0.y /= Screen.height;
+                fsPts = new List<Vector2>();
+                fsPts.Add(p0);
+                fsPts.Add(fsPosMid);
+                fsPts.Add(fsPosRun);
+                fs = Scoreboard.S.CreateFloatingScore(ScoreManager.CHAIN, fsPts);
+                fs.fontSizes = new List<float>(new float[] { 4, 50, 28 });
+                if (fsRun == null)
+                {
+                    fsRun = fs;
+                    fsRun.reportFinishTo = null;
+                }
+                else
+                {
+                    fs.reportFinishTo = fsRun.gameObject;
+                }
+                break;
+        }
+    }
 }
