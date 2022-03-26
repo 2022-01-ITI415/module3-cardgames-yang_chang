@@ -14,7 +14,7 @@ public class ScoreManager : MonoBehaviour
     static private ScoreManager S;
     static public int SCORE_FROM_PREV_ROUND = 0;
     static public int HIGH_SCORE = 0;
-    [Header("SetDynamically")]
+    [Header("Set Dynamically")]
     public int chain = 0;
     public int scoreRun = 0;
     public int score = 0;
@@ -43,7 +43,7 @@ public class ScoreManager : MonoBehaviour
         {
             S.Event(evt);
         }
-        catch (System.NullReferenceException nre)
+        catch (System .NullReferenceException nre)
         {
             Debug.LogError ("ScoreManager:EVENT() called while S = null. \n" +nre);
         }
@@ -86,13 +86,11 @@ public class ScoreManager : MonoBehaviour
                     print("Your final score for the game was:" + score);
                 }
                 break;
-
             default:
                 print("score:" + score + "scoreRun:" + scoreRun + "chain:" + chain);
                 break;
         }
     }
-
     static public int CHAIN { get { return S.chain; } }
     static public int SCORE { get { return S.score; } }
     static public int SCORE_RUN { get { return S.scoreRun; } }
