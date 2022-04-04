@@ -246,6 +246,10 @@ public class Prospector : MonoBehaviour
             GameOver(true);
             return;
         }
+        if (drawPile.Count > 0)
+        {
+            return;
+        }
         foreach (CardProspector cd in tableau)
         {
             if (AdjacentRank(cd, target))

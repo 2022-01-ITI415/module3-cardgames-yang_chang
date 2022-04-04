@@ -24,6 +24,7 @@ public class Deck : MonoBehaviour {
 	// Prefabs
 	public GameObject prefabSprite;
 	public GameObject prefabCard;
+	public GameObject prefabGoldCard;
 
 	[Header("Set Dynamically")]
 
@@ -158,10 +159,28 @@ public class Deck : MonoBehaviour {
 		SpriteRenderer tSR = null;  // so tempted to make a D&D ref here...
 		
 		for (int i=0; i<cardNames.Count; i++) {
-			GameObject cgo = Instantiate(prefabCard) as GameObject;
+			GameObject cgo = null;
+			bool gold = false;
+			if (Random.value <= 0.1f)
+            {
+				cgo = Instantiate(prefabGoldCard) as GameObject;			
+				gold = true;
+			}
+            else
+            {
+				cgo = Instantiate(prefabCard) as GameObject;
+				gold = false;
+			}
 			cgo.transform.parent = deckAnchor;
 			Card card = cgo.GetComponent<Card>();
-			
+			if (gold == true)
+            {
+				card.gold = true;
+            }
+            else
+            {
+				card.gold = false;
+            }
 			cgo.transform.localPosition = new Vector3(i%13*3, i/13*4, 0);
 			
 			card.name = cardNames[i];
@@ -241,7 +260,14 @@ public class Deck : MonoBehaviour {
 
 			tGO = Instantiate(prefabSprite) as GameObject;
 			tSR = tGO.GetComponent<SpriteRenderer>();
-			tSR.sprite = cardBack;
+			if (card.gold == true)
+            {
+				tSR.sprite = cardBackGold;
+			}
+            else
+            {
+				tSR.sprite = cardBack;
+			}
 			tGO.transform.SetParent(card.transform);
 			tGO.transform.localPosition=Vector3.zero;
 			tSR.sortingOrder = 2;
@@ -284,6 +310,5 @@ public class Deck : MonoBehaviour {
 
 
 	 }
-
 
 } // Deck class
