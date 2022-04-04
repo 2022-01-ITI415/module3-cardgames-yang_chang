@@ -30,6 +30,8 @@ public class Prospector : MonoBehaviour
     public List<CardProspector> tableau;
     public List<CardProspector> discardPile;
     public FloatingScore fsRun;
+    public Sprite frontGold;
+    public Sprite backGold;
     private Text highScoreText;
     private Text gameOverText;
     private Text roundResultText;
@@ -97,6 +99,8 @@ public class Prospector : MonoBehaviour
     }
     void LayoutGame()
     {
+        SpriteRenderer tSR = null;
+
         if (layoutAnchor == null)
         {
             GameObject tGO = new GameObject("_LayoutAnchor");
@@ -121,6 +125,14 @@ public class Prospector : MonoBehaviour
         }
         foreach (CardProspector tCP in tableau)
         {
+            tSR = tCP.GetComponent<SpriteRenderer>();
+            if (tCP.gold == true)
+            {
+                tSR.sprite = frontGold;
+                GameObject cGo = tCP.transform.Find("back").gameObject;
+                SpriteRenderer cSR = cGo.GetComponent<SpriteRenderer>();
+                cSR.sprite = backGold;
+            }
             foreach (int hid in tCP.slotDef.hiddenBy)
             {
                 cp = FindCardByLayoutID(hid);

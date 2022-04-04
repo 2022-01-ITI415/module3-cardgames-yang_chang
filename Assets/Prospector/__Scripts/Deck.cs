@@ -161,19 +161,10 @@ public class Deck : MonoBehaviour {
 		for (int i=0; i<cardNames.Count; i++) {
 			GameObject cgo = null;
 			bool gold = false;
-			if (Random.value <= 0.1f)
-            {
-				cgo = Instantiate(prefabGoldCard) as GameObject;			
-				gold = true;
-			}
-            else
-            {
-				cgo = Instantiate(prefabCard) as GameObject;
-				gold = false;
-			}
+			cgo = Instantiate(prefabCard) as GameObject;
 			cgo.transform.parent = deckAnchor;
 			Card card = cgo.GetComponent<Card>();
-			if (gold == true)
+			if (Random.value <= 0.1f)
             {
 				card.gold = true;
             }
@@ -260,14 +251,7 @@ public class Deck : MonoBehaviour {
 
 			tGO = Instantiate(prefabSprite) as GameObject;
 			tSR = tGO.GetComponent<SpriteRenderer>();
-			if (card.gold == true)
-            {
-				tSR.sprite = cardBackGold;
-			}
-            else
-            {
-				tSR.sprite = cardBack;
-			}
+			tSR.sprite = cardBack;
 			tGO.transform.SetParent(card.transform);
 			tGO.transform.localPosition=Vector3.zero;
 			tSR.sortingOrder = 2;
