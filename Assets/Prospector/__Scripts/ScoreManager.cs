@@ -18,6 +18,7 @@ public class ScoreManager : MonoBehaviour
     public int chain = 0;
     public int scoreRun = 0;
     public int score = 0;
+    public int multiple = 1;
 
     void Awake()
     {
@@ -55,6 +56,7 @@ public class ScoreManager : MonoBehaviour
             case eScoreEvent.draw:
             case eScoreEvent.gameWin:
             case eScoreEvent.gameLoss:
+                multiple = 1;
                 chain = 0;
                 score += scoreRun;
                 scoreRun = 0;
@@ -62,7 +64,13 @@ public class ScoreManager : MonoBehaviour
 
             case eScoreEvent.mine:
                 chain++;
-                scoreRun += chain;
+                scoreRun += chain * multiple;
+                break;
+            case eScoreEvent.mineGold:
+                multiple = multiple * 2;
+                chain++;
+                scoreRun = scoreRun * 2;
+                scoreRun += chain * multiple;              
                 break;
         }
 
@@ -87,11 +95,11 @@ public class ScoreManager : MonoBehaviour
                 }
                 break;
             default:
-                print("score:" + score + "scoreRun:" + scoreRun + "chain:" + chain);
+                print("score:" + score + "scoreRun:" + scoreRun + "chain:" + chain + "multiple" + multiple);
                 break;
         }
     }
-    static public int CHAIN { get { return S.chain; } }
+    static public int CHAIN { get { return S.chain * S.multiple; } }
     static public int SCORE { get { return S.score; } }
     static public int SCORE_RUN { get { return S.scoreRun; } }
 }
