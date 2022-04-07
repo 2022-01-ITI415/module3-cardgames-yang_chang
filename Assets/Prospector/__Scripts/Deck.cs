@@ -125,6 +125,7 @@ public class Deck : MonoBehaviour {
 			// foramt is ##A, where ## in 11, 12, 13 and A is letter indicating suit
 			if (xCardDefs[i].HasAtt("face")){
 				cDef.face = xCardDefs[i].att ("face");
+				cDef.scale = float.Parse(xCardDefs[i].att("scale")); //changed!!!!!!!!!!! delet
 			}
 			cardDefs.Add (cDef);
 		} // for i < xCardDefs.Count
@@ -160,7 +161,6 @@ public class Deck : MonoBehaviour {
 		
 		for (int i=0; i<cardNames.Count; i++) {
 			GameObject cgo = null;
-			bool gold = false;
 			cgo = Instantiate(prefabCard) as GameObject;
 			cgo.transform.parent = deckAnchor;
 			Card card = cgo.GetComponent<Card>();
@@ -245,7 +245,8 @@ public class Deck : MonoBehaviour {
 				tSR.sprite = tS;
 				tSR.sortingOrder = 1;
 				tGO.transform.parent=card.transform;
-				tGO.transform.localPosition = Vector3.zero;  // slap it smack dab in the middle
+				tGO.transform.localPosition = Vector3.zero; // (slap it smack dab in the middle) changed!!!!!!!!  new Vector3(0, -0.6f, 0)
+				tGO.transform.localScale = Vector3.one * card.def.scale; // changed!!!!!!!! delet
 				tGO.name = "face";
 			}
 
