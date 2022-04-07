@@ -134,6 +134,7 @@ public class Prospector_ : MonoBehaviour
         MoveToTemporaryTableau(Draw());
         //MoveToTarget(Draw());
         UpdateDrawPile();
+        SetCardAvailable();
     }
     CardProspector FindCardByLayoutID(int layoutID)
     {
@@ -273,7 +274,7 @@ public class Prospector_ : MonoBehaviour
                 if (!validMatch) return;
                 tableau.Remove(cd);
                 //MoveToTarget(cd);
-                //SetTableauFaces();
+                SetCardAvailable();
                 //else
                 //{
                     //ScoreManager.EVENT(eScoreEvent.mine);
@@ -291,6 +292,35 @@ public class Prospector_ : MonoBehaviour
     void SelectedZoomOut(CardProspector cd)
     {
         cd.transform.localScale = cd.transform.localScale * 0.8f;
+    }
+
+    void SetCardAvailable()
+    {
+        foreach (CardProspector cd in tableau)
+        {
+            bool available = true;
+            foreach (CardProspector cover in cd.hiddenBy)
+            {
+                if (cover.state == eCardState.tableau)
+                {
+                    Debug.Log("1");
+                    available = false;
+                }
+                if (cover.state == eCardState.unavailable)
+                {
+                    available = false;
+                }
+            }
+            if (available == true)
+            {
+                Debug.Log("2");
+                cd.state = eCardState.tableau;
+            }
+            else
+            {
+                cd.state = eCardState.unavailable;
+            }
+        }
     }
     void SetTableauFaces()
     {

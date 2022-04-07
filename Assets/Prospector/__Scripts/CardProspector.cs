@@ -5,6 +5,7 @@ using UnityEngine;
 public enum eCardState{
     drawpile,
     tableau,
+    unavailable,
     temporary,
     target,
     discard
