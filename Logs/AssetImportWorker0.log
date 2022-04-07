@@ -2640,3 +2640,28 @@ AssetImportParameters requested are different than current active one (requested
   custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
   custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
   custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  Time since last request: 2301.528821 seconds.
+  path: Assets/OtherGame/_Prefabs/PrefabCardNew.prefab
+  artifactKey: Guid(6fec7a36c7476d545a2edb5a09c8acc4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/OtherGame/_Prefabs/PrefabCardNew.prefab using Guid(6fec7a36c7476d545a2edb5a09c8acc4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'b833918088ec088d0fb2da52caa73a68') in 0.124661 seconds 
+  Import took 0.126827 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 8.312099 seconds.
+  path: Assets/Prospector/Resources/LayoutXMLB.xml
+  artifactKey: Guid(92c8dfe03e31ca947bdda5670d44914d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prospector/Resources/LayoutXMLB.xml using Guid(92c8dfe03e31ca947bdda5670d44914d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '318065004be2f6bd32cd6031cb9cfdb6') in 0.015154 seconds 
+  Import took 0.017537 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 2.318234 seconds.
+  path: Assets/Prospector/Resources/DeckXML2.xml
+  artifactKey: Guid(0eef8d276b436da4f83b2d5823a8feb1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prospector/Resources/DeckXML2.xml using Guid(0eef8d276b436da4f83b2d5823a8feb1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'ed372b3d3ef7161ae20e37f5601fe70f') in 0.004257 seconds 
+  Import took 0.006067 seconds .
+
+AssetImportWorkerClient::OnTransportError - code=2 error=End of file
