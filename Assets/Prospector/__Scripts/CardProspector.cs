@@ -5,8 +5,6 @@ using UnityEngine;
 public enum eCardState{
     drawpile,
     tableau,
-    unavailable,
-    temporary,
     target,
     discard
 }
@@ -19,7 +17,7 @@ public class CardProspector : Card
     public SlotDef slotDef;
     public override void OnMouseUpAsButton()
     {
-        Prospector_.S.CardClicked(this);
+        Prospector.S.CardClicked(this);
         base.OnMouseUpAsButton();
     }
 }

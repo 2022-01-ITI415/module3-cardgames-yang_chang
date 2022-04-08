@@ -5,10 +5,10 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-public class Prospector_ : MonoBehaviour
+public class Pyramid : MonoBehaviour
 {
 
-    static public Prospector_ S;
+    static public Pyramid S;
 
     [Header("Set in Inspector")]
     public TextAsset deckXML;
@@ -24,15 +24,17 @@ public class Prospector_ : MonoBehaviour
     [Header("Set Dynamically")]
     public Deck deck;
     public Layout layout;
-    public List<CardProspector> drawPile;
+    public List<CardPyramid> drawPile;
     public Transform layoutAnchor;
-    public CardProspector current;
-    public CardProspector selectedCard_1;
-    public CardProspector selectedCard_2;
-    public List<CardProspector> tableau;
-    public List<CardProspector> temporary;
-    public List<CardProspector> discardPile;
+    public CardPyramid current;
+    public CardPyramid selectedCard_1;
+    public CardPyramid selectedCard_2;
+    public List<CardPyramid> tableau;
+    public List<CardPyramid> temporary;
+    public List<CardPyramid> discardPile;
     public FloatingScore fsRun;
+    public GameObject button;
+    public int shuffleNum = 2;
     private Text highScoreText;
     private Text gameOverText;
     private Text roundResultText;
@@ -78,23 +80,23 @@ public class Prospector_ : MonoBehaviour
         Deck.Shuffle(ref deck.cards);
         layout = GetComponent<Layout_>();
         layout.ReadLayout(layoutXML.text);
-        drawPile = ConvertListCardsToListCardProspectors(deck.cards);
+        drawPile = ConvertListCardsToListCardPyramids(deck.cards);
         LayoutGame();
     }
-    List<CardProspector> ConvertListCardsToListCardProspectors(List<Card> lCD)
+    List<CardPyramid> ConvertListCardsToListCardPyramids(List<Card> lCD)
     {
-        List<CardProspector> lCP = new List<CardProspector>();
-        CardProspector tCP;
+        List<CardPyramid> lCP = new List<CardPyramid>();
+        CardPyramid tCP;
         foreach (Card tCD in lCD)
         {
-            tCP = tCD as CardProspector;
+            tCP = tCD as CardPyramid;
             lCP.Add(tCP);
         }
         return (lCP);
     }
-    CardProspector Draw()
+    CardPyramid Draw()
     {
-        CardProspector cd = drawPile[0];
+        CardPyramid cd = drawPile[0];
         drawPile.RemoveAt(0);
         return (cd);
     }
@@ -107,7 +109,7 @@ public class Prospector_ : MonoBehaviour
             layoutAnchor = tGO.transform;
             layoutAnchor.transform.position = layoutCenter;
         }
-        CardProspector cp;
+        CardPyramid cp;
         foreach (SlotDef tSD in layout.slotDefs)
         {
             cp = Draw();
@@ -119,11 +121,11 @@ public class Prospector_ : MonoBehaviour
                 -tSD.layerID);
             cp.layoutID = tSD.id;
             cp.slotDef = tSD;
-            cp.state = eCardState.tableau;
+            cp.state = pCardState.tableau;
             cp.SetSortingLayerName(tSD.layerName);
             tableau.Add(cp);
         }
-        foreach (CardProspector tCP in tableau)
+        foreach (CardPyramid tCP in tableau)
         {
             foreach (int hid in tCP.slotDef.hiddenBy)
             {
@@ -136,9 +138,9 @@ public class Prospector_ : MonoBehaviour
         UpdateDrawPile();
         SetCardAvailable();
     }
-    CardProspector FindCardByLayoutID(int layoutID)
+    CardPyramid FindCardByLayoutID(int layoutID)
     {
-        foreach (CardProspector tCP in tableau)
+        foreach (CardPyramid tCP in tableau)
         {
             if (tCP.layoutID == layoutID)
             {
@@ -147,7 +149,7 @@ public class Prospector_ : MonoBehaviour
         }
         return (null);
     }
-    void MoveToDiscard(CardProspector cd)
+    void MoveToDiscard(CardPyramid cd)
     {
         if (cd == current)
         {
@@ -158,7 +160,7 @@ public class Prospector_ : MonoBehaviour
                 temporary.Remove(temporary[temporary.Count - 1]);
             }
         }
-        cd.state = eCardState.discard;
+        cd.state = pCardState.discard;
         discardPile.Add(cd);
         cd.transform.parent = layoutAnchor;
         cd.transform.localPosition = new Vector3(
@@ -170,9 +172,9 @@ public class Prospector_ : MonoBehaviour
         cd.SetSortOrder(-100 + discardPile.Count);
     }
 
-    void MoveToTemporaryPile(CardProspector cd)
+    void MoveToTemporaryPile(CardPyramid cd)
     {
-        cd.state = eCardState.temporary;
+        cd.state = pCardState.temporary;
         temporary.Add(cd);
         cd.transform.parent = layoutAnchor;
         cd.transform.localPosition = new Vector3(
@@ -183,10 +185,10 @@ public class Prospector_ : MonoBehaviour
         cd.SetSortingLayerName(layout.temporaryPile.layerName);
         cd.SetSortOrder(-100 + temporary.Count);
     }
-    void MoveToTemporaryTableau(CardProspector cd)
+    void MoveToTemporaryTableau(CardPyramid cd)
     {
         current = cd;
-        cd.state = eCardState.tableau;
+        cd.state = pCardState.tableau;
         cd.transform.parent = layoutAnchor;
         cd.transform.localPosition = new Vector3(
         layout.multiplier.x * layout.temporaryPile.x,
@@ -200,7 +202,7 @@ public class Prospector_ : MonoBehaviour
 
     void UpdateDrawPile()
     {
-        CardProspector cd;
+        CardPyramid cd;
         for (int i = 0; i < drawPile.Count; i++)
         {
             cd = drawPile[i];
@@ -212,18 +214,19 @@ public class Prospector_ : MonoBehaviour
             layout.multiplier.y * (layout.drawPile.y + i * dpStagger.y),
             -layout.drawPile.layerID + 0.1f * i);
             cd.faceUp = false;
-            cd.state = eCardState.drawpile;
+            cd.state = pCardState.drawpile;
             cd.SetSortingLayerName(layout.drawPile.layerName);
             cd.SetSortOrder(-10 * i);
+            Debug.Log(i);
         }
     }
-    public void CardClicked(CardProspector cd)
+    public void CardClicked(CardPyramid cd)
     {
         switch (cd.state)
         {
-            case eCardState.target:
+            case pCardState.target:
                 break;
-            case eCardState.drawpile:
+            case pCardState.drawpile:
                 if (selectedCard_1 != null)
                 {
                     SelectedZoomOut(selectedCard_1);
@@ -235,10 +238,12 @@ public class Prospector_ : MonoBehaviour
                 }              
                 MoveToTemporaryTableau(Draw());            
                 UpdateDrawPile();
-                ScoreManager.EVENT(eScoreEvent.draw);
-                FloatingScoreHandler(eScoreEvent.draw);
+                if (drawPile.Count < 1 && shuffleNum > 0)
+                {
+                    button.SetActive(true);
+                }
                 break;
-            case eCardState.tableau:
+            case pCardState.tableau:
                 bool validMatch = false;
                 if (cd.rank == 13)
                 {
@@ -284,52 +289,80 @@ public class Prospector_ : MonoBehaviour
         }
         //CheckForGameOver();
     }
-
-    void SelectedZoomIn(CardProspector cd)
+    void SelectedZoomIn(CardPyramid cd)
     {
         cd.transform.localScale = cd.transform.localScale * 1.25f;
     }
-    void SelectedZoomOut(CardProspector cd)
+    void SelectedZoomOut(CardPyramid cd)
     {
         cd.transform.localScale = cd.transform.localScale * 0.8f;
+    }
+    public void Reshuffle()
+    {
+        MoveToTemporaryPile(current);
+        current = null;
+
+        drawPile = temporary;
+        temporary = new List<CardPyramid>();
+
+        UpdateDrawPile();
+        MoveToTemporaryTableau(Draw());
+        Shuffle();
+
+        shuffleNum--;
+
+        button.SetActive(false);
+    }
+
+    void Shuffle()
+    {
+        List<CardPyramid> tCards = new List<CardPyramid>();
+        int ndx; 
+        while (drawPile.Count > 0)
+        {
+            ndx = Random.Range(0, drawPile.Count);
+            tCards.Add(drawPile[ndx]);
+            drawPile.RemoveAt(ndx);
+        }
+        drawPile = tCards;
     }
 
     void SetCardAvailable()
     {
-        foreach (CardProspector cd in tableau)
+        foreach (CardPyramid cd in tableau)
         {
             bool available = true;
-            foreach (CardProspector cover in cd.hiddenBy)
+            foreach (CardPyramid cover in cd.hiddenBy)
             {
-                if (cover.state == eCardState.tableau)
+                if (cover.state == pCardState.tableau)
                 {
-                    Debug.Log("1");
                     available = false;
                 }
-                if (cover.state == eCardState.unavailable)
+                if (cover.state == pCardState.unavailable)
                 {
                     available = false;
                 }
             }
             if (available == true)
             {
-                Debug.Log("2");
-                cd.state = eCardState.tableau;
+                cd.state = pCardState.tableau;
+                cd.GetComponent<SpriteRenderer>().color = Color.white;
             }
             else
             {
-                cd.state = eCardState.unavailable;
+                cd.state = pCardState.unavailable;
+                cd.GetComponent<SpriteRenderer>().color = Color.gray;
             }
         }
     }
     void SetTableauFaces()
     {
-        foreach (CardProspector cd in tableau)
+        foreach (CardPyramid cd in tableau)
         {
             bool faceUp = true;
-            foreach (CardProspector cover in cd.hiddenBy)
+            foreach (CardPyramid cover in cd.hiddenBy)
             {
-                if (cover.state == eCardState.tableau)
+                if (cover.state == pCardState.tableau)
                 {
                     faceUp = false;
                 }
@@ -348,7 +381,7 @@ public class Prospector_ : MonoBehaviour
         {
             return;
         }
-        foreach (CardProspector cd in tableau)
+        foreach (CardPyramid cd in tableau)
         {
             if (AdjacentRank(cd, current))
             {
@@ -385,14 +418,14 @@ public class Prospector_ : MonoBehaviour
             ScoreManager.EVENT(eScoreEvent.gameLoss);
             FloatingScoreHandler(eScoreEvent.gameLoss);
         }
-        //SceneManager.LoadScene("_Prospector_Scene_0");
+        //SceneManager.LoadScene("_pyramidScene_0");
         Invoke("ReloadLevel", reloadDelay);
     }
     void ReloadLevel()
     {
-        SceneManager.LoadScene("__Prospector_Scene_0");
+        SceneManager.LoadScene("__pyramidScene_0");
     }
-    public bool AdjacentRank(CardProspector c0, CardProspector c1)
+    public bool AdjacentRank(CardPyramid c0, CardPyramid c1)
     {
         if (!c0.faceUp || !c1.faceUp) return (false);
         if (c0.rank + c1.rank == 13)
