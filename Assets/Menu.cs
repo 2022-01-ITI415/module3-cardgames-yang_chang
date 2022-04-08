@@ -13,4 +13,8 @@ public class Menu : MonoBehaviour
     {
         SceneManager.LoadScene(2);
     }
+    public void BackToTitle()
+    {
+        SceneManager.LoadScene(0);
+    }
 }

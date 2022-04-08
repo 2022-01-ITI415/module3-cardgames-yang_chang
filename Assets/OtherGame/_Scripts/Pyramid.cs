@@ -241,6 +241,8 @@ public class Pyramid : MonoBehaviour
                 {
                     button.SetActive(true);
                 }
+                ScoreManager.EVENT(eScoreEvent.draw);
+                FloatingScoreHandler(eScoreEvent.draw);
                 break;
             case pCardState.tableau:
                 bool validMatch = false;
@@ -268,17 +270,6 @@ public class Pyramid : MonoBehaviour
                     SelectedZoomOut(selectedCard_1);
                     tableau.Remove(selectedCard_1);
                     MoveToDiscard(selectedCard_1);
-                    //foreach (CardPyramid acd in availableCards)
-                    //{
-                    //    if (cd == acd)
-                    //    {
-                    //        availableCards.Remove(acd);
-                    //    }
-                    //    if (selectedCard_1 == acd)
-                    //    {
-                    //        availableCards.Remove(acd);
-                    //    }
-                    //}
                     selectedCard_1 = null;
                 }
                 if (!cd.faceUp)
@@ -290,12 +281,10 @@ public class Pyramid : MonoBehaviour
                 tableau.Remove(cd);
                 //MoveToTarget(cd);
                 SetCardAvailable();
-                Debug.Log(availableCards.Count);
-                //else
-                //{
-                    //ScoreManager.EVENT(eScoreEvent.mine);
-                    //FloatingScoreHandler(eScoreEvent.mine);
-                //}
+
+                ScoreManager.EVENT(eScoreEvent.mine);
+                FloatingScoreHandler(eScoreEvent.mine);
+
                 break;
         }
         CheckForGameOver();
@@ -417,31 +406,31 @@ public class Pyramid : MonoBehaviour
     }
     void GameOver(bool won)
     {
-        //int score = ScoreManager.SCORE;
-        //if (fsRun != null) score += fsRun.score;
+        int score = ScoreManager.SCORE;
+        if (fsRun != null) score += fsRun.score;
         if (won)
         {
             gameOverText.text = "Round Over";
-            //roundResultText.text = "You won this round!\nRound Score: " + score;
+            roundResultText.text = "You won this round!\nRound Score: " + score;
             ShowResultsUI(true);
-            //ScoreManager.EVENT(eScoreEvent.gameWin);
-            //FloatingScoreHandler(eScoreEvent.gameWin);
+            ScoreManager.EVENT(eScoreEvent.gameWin);
+            FloatingScoreHandler(eScoreEvent.gameWin);
         }
         else
         {
             gameOverText.text = "Game Over";
-            //if (ScoreManager.HIGH_SCORE <= score)
-            //{
-            //    string str = "You got the high score!\nHigh score: " + score;
-            //    roundResultText.text = str;
-            //}
-            //else
-            //{
-            //    roundResultText.text = "Your final score was: " + score;
-            //}
+            if (ScoreManager.HIGH_SCORE <= score)
+            {
+                string str = "You got the high score!\nHigh score: " + score;
+                roundResultText.text = str;
+            }
+            else
+            {
+                roundResultText.text = "Your final score was: " + score;
+            }
             ShowResultsUI(true);
-            //ScoreManager.EVENT(eScoreEvent.gameLoss);
-            //FloatingScoreHandler(eScoreEvent.gameLoss);
+            ScoreManager.EVENT(eScoreEvent.gameLoss);
+            FloatingScoreHandler(eScoreEvent.gameLoss);
         }
         //SceneManager.LoadScene("_pyramidScene_0");
         Invoke("ReloadLevel", reloadDelay);
