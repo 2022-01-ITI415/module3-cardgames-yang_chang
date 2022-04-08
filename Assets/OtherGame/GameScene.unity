@@ -566,6 +566,7 @@ GameObject:
   - component: {fileID: 628232826}
   - component: {fileID: 628232825}
   - component: {fileID: 628232824}
+  - component: {fileID: 628232828}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -659,6 +660,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &628232828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 628232823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5f09c903a044bf48bd950cf51383150, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &827460508
 GameObject:
   m_ObjectHideFlags: 0
@@ -882,13 +895,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 827460508}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b4dddd062eb640cab82ef2e023bee18, type: 3}
+  m_Script: {fileID: 11500000, guid: 26ad70b358cc2bd4d8ed11891e4e4372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   chain: 0
   scoreRun: 0
   score: 0
-  multiple: 1
 --- !u!114 &827460516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -917,7 +929,6 @@ MonoBehaviour:
   layoutAnchor: {fileID: 0}
   current: {fileID: 0}
   selectedCard_1: {fileID: 0}
-  selectedCard_2: {fileID: 0}
   tableau: []
   temporary: []
   discardPile: []
@@ -1153,9 +1164,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 827460516}
-        m_TargetAssemblyTypeName: Pyramid, Assembly-CSharp
-        m_MethodName: Reshuffle
+      - m_Target: {fileID: 628232828}
+        m_TargetAssemblyTypeName: Menu, Assembly-CSharp
+        m_MethodName: BackToTitle
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1250,10 +1261,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1572883776}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9920f8bbc92c64105bea5b4ef3715696, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e22b0ce215b7b64082ce037dddf32a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabFloatingScore: {fileID: 6889292200098601407, guid: 90b4cf89659f047e0a70934c94619218,
+  prefabFloatingScore_: {fileID: 6889292200098601407, guid: 10410b411ab2e9448aa2f279e18a6b2a,
     type: 3}
   _score: 0
   _scoreString: 
