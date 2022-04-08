@@ -32,6 +32,7 @@ public class Pyramid : MonoBehaviour
     public List<CardPyramid> tableau;
     public List<CardPyramid> temporary;
     public List<CardPyramid> discardPile;
+    public List<CardPyramid> availableCards;
     public FloatingScore fsRun;
     public GameObject button;
     public int shuffleNum = 2;
@@ -134,7 +135,6 @@ public class Pyramid : MonoBehaviour
             }
         }
         MoveToTemporaryTableau(Draw());
-        //MoveToTarget(Draw());
         UpdateDrawPile();
         SetCardAvailable();
     }
@@ -217,7 +217,6 @@ public class Pyramid : MonoBehaviour
             cd.state = pCardState.drawpile;
             cd.SetSortingLayerName(layout.drawPile.layerName);
             cd.SetSortOrder(-10 * i);
-            Debug.Log(i);
         }
     }
     public void CardClicked(CardPyramid cd)
@@ -269,6 +268,17 @@ public class Pyramid : MonoBehaviour
                     SelectedZoomOut(selectedCard_1);
                     tableau.Remove(selectedCard_1);
                     MoveToDiscard(selectedCard_1);
+                    //foreach (CardPyramid acd in availableCards)
+                    //{
+                    //    if (cd == acd)
+                    //    {
+                    //        availableCards.Remove(acd);
+                    //    }
+                    //    if (selectedCard_1 == acd)
+                    //    {
+                    //        availableCards.Remove(acd);
+                    //    }
+                    //}
                     selectedCard_1 = null;
                 }
                 if (!cd.faceUp)
@@ -280,6 +290,7 @@ public class Pyramid : MonoBehaviour
                 tableau.Remove(cd);
                 //MoveToTarget(cd);
                 SetCardAvailable();
+                Debug.Log(availableCards.Count);
                 //else
                 //{
                     //ScoreManager.EVENT(eScoreEvent.mine);
@@ -287,7 +298,7 @@ public class Pyramid : MonoBehaviour
                 //}
                 break;
         }
-        //CheckForGameOver();
+        CheckForGameOver();
     }
     void SelectedZoomIn(CardPyramid cd)
     {
@@ -329,6 +340,8 @@ public class Pyramid : MonoBehaviour
 
     void SetCardAvailable()
     {
+        List<CardPyramid> newList = new List<CardPyramid>();
+        availableCards = newList;
         foreach (CardPyramid cd in tableau)
         {
             bool available = true;
@@ -347,6 +360,7 @@ public class Pyramid : MonoBehaviour
             {
                 cd.state = pCardState.tableau;
                 cd.GetComponent<SpriteRenderer>().color = Color.white;
+                availableCards.Add(cd);
             }
             else
             {
@@ -377,13 +391,24 @@ public class Pyramid : MonoBehaviour
             GameOver(true);
             return;
         }
-        if (drawPile.Count > 0)
+        if (drawPile.Count > 0 || shuffleNum > 0)
         {
             return;
         }
-        foreach (CardPyramid cd in tableau)
+        foreach (CardPyramid cd in availableCards)
         {
+            foreach (CardPyramid cd2 in availableCards)
+            {
+                if (AdjacentRank(cd, cd2))
+                {
+                    return;
+                }
+            }
             if (AdjacentRank(cd, current))
+            {
+                return;
+            }
+            if (cd.rank == 13)
             {
                 return;
             }
@@ -392,38 +417,38 @@ public class Pyramid : MonoBehaviour
     }
     void GameOver(bool won)
     {
-        int score = ScoreManager.SCORE;
-        if (fsRun != null) score += fsRun.score;
+        //int score = ScoreManager.SCORE;
+        //if (fsRun != null) score += fsRun.score;
         if (won)
         {
             gameOverText.text = "Round Over";
-            roundResultText.text = "You won this round!\nRound Score: " + score;
+            //roundResultText.text = "You won this round!\nRound Score: " + score;
             ShowResultsUI(true);
-            ScoreManager.EVENT(eScoreEvent.gameWin);
-            FloatingScoreHandler(eScoreEvent.gameWin);
+            //ScoreManager.EVENT(eScoreEvent.gameWin);
+            //FloatingScoreHandler(eScoreEvent.gameWin);
         }
         else
         {
             gameOverText.text = "Game Over";
-            if (ScoreManager.HIGH_SCORE <= score)
-            {
-                string str = "You got the high score!\nHigh score: " + score;
-                roundResultText.text = str;
-            }
-            else
-            {
-                roundResultText.text = "Your final score was: " + score;
-            }
+            //if (ScoreManager.HIGH_SCORE <= score)
+            //{
+            //    string str = "You got the high score!\nHigh score: " + score;
+            //    roundResultText.text = str;
+            //}
+            //else
+            //{
+            //    roundResultText.text = "Your final score was: " + score;
+            //}
             ShowResultsUI(true);
-            ScoreManager.EVENT(eScoreEvent.gameLoss);
-            FloatingScoreHandler(eScoreEvent.gameLoss);
+            //ScoreManager.EVENT(eScoreEvent.gameLoss);
+            //FloatingScoreHandler(eScoreEvent.gameLoss);
         }
         //SceneManager.LoadScene("_pyramidScene_0");
         Invoke("ReloadLevel", reloadDelay);
     }
     void ReloadLevel()
     {
-        SceneManager.LoadScene("__pyramidScene_0");
+        SceneManager.LoadScene("GameScene");
     }
     public bool AdjacentRank(CardPyramid c0, CardPyramid c1)
     {
