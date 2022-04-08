@@ -24,6 +24,7 @@ public class Deck : MonoBehaviour {
 	// Prefabs
 	public GameObject prefabSprite;
 	public GameObject prefabCard;
+	public GameObject prefabGoldCard;
 
 	[Header("Set Dynamically")]
 
@@ -124,6 +125,7 @@ public class Deck : MonoBehaviour {
 			// foramt is ##A, where ## in 11, 12, 13 and A is letter indicating suit
 			if (xCardDefs[i].HasAtt("face")){
 				cDef.face = xCardDefs[i].att ("face");
+				cDef.scale = float.Parse(xCardDefs[i].att("scale")); //changed!!!!!!!!!!! delet
 			}
 			cardDefs.Add (cDef);
 		} // for i < xCardDefs.Count
@@ -158,10 +160,18 @@ public class Deck : MonoBehaviour {
 		SpriteRenderer tSR = null;  // so tempted to make a D&D ref here...
 		
 		for (int i=0; i<cardNames.Count; i++) {
-			GameObject cgo = Instantiate(prefabCard) as GameObject;
+			GameObject cgo = null;
+			cgo = Instantiate(prefabCard) as GameObject;
 			cgo.transform.parent = deckAnchor;
 			Card card = cgo.GetComponent<Card>();
-			
+			if (Random.value <= 0.1f)
+            {
+				card.gold = true;
+            }
+            else
+            {
+				card.gold = false;
+            }
 			cgo.transform.localPosition = new Vector3(i%13*3, i/13*4, 0);
 			
 			card.name = cardNames[i];
@@ -235,7 +245,8 @@ public class Deck : MonoBehaviour {
 				tSR.sprite = tS;
 				tSR.sortingOrder = 1;
 				tGO.transform.parent=card.transform;
-				tGO.transform.localPosition = Vector3.zero;  // slap it smack dab in the middle
+				tGO.transform.localPosition = Vector3.zero; // (slap it smack dab in the middle) changed!!!!!!!!  new Vector3(0, -0.6f, 0)
+				tGO.transform.localScale = Vector3.one * card.def.scale; // changed!!!!!!!! delet
 				tGO.name = "face";
 			}
 
@@ -284,6 +295,5 @@ public class Deck : MonoBehaviour {
 
 
 	 }
-
 
 } // Deck class
